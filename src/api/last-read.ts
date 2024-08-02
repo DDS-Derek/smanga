@@ -1,3 +1,10 @@
+/*
+ * @Author: 梁楷文 lkw199711@163.com
+ * @Date: 2024-04-05 03:53:27
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-08-02 17:02:55
+ * @FilePath: \smanga\src\api\last-read.ts
+ */
 import {ajax} from './index';
 
 /**
@@ -32,7 +39,8 @@ const lastReadApi = {
 	 */
 	add(page: number, chapterId: number, mangaId: number, finish = false) {
 		ajax({
-			url: 'lastread/add',
+			url: 'latest',
+			method: 'post',
 			data: {page, chapterId, mangaId, finish},
 		});
 	},

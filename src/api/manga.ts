@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-10-26 20:25:18
  * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-05-17 11:15:56
+ * @LastEditTime: 2024-08-02 11:02:07
  * @FilePath: /smanga/src/api/manga.ts
  */
 import {ajax} from './index';
@@ -98,14 +98,13 @@ const mangaApi = {
 	 * @return {*}
 	 */
 	async get_manga_info(mangaId: number) {
-		const res = ajax({
-			url: 'manga',
-			data: {mangaId},
+		const res = await ajax({
+			url: `manga/${mangaId}`,
 		});
 
-		const data = (await res).data;
+		const data = res.data;
 
-		return data.request;
+		return data.code === 0 ? data.data : {};
 	},
 
 	/**

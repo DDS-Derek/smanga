@@ -83,6 +83,7 @@ import { chapterInfoType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
 import { global_set, global_set_json } from '@/utils'
 import lastReadApi from '@/api/last-read';
+import lastesApi from '@/api/last-read';
 import collectApi from '@/api/collect';
 import mangaTagBox from '@/components/manga-tag-box.vue';
 
@@ -240,25 +241,25 @@ function go_chapter_list() {
 async function render_meta() {
     const route = useRoute();
     const mangaId = Number(route.query.mangaId);
-    const res = await mangaApi.get_manga_info(mangaId);
+    mangaInfo = await mangaApi.get_manga_info(mangaId);
     let bannerSoft: metaItemType[] = [];
+    console.log(mangaInfo, 'res');
     
-    mangaInfo = res.info;
-    tags.value = res.tags;
-    title.value = res.info.mangaName;
+    tags.value = mangaInfo.tags;
+    title.value = mangaInfo.mangaName;
 
     // 角色信息
-    character.value = res.character;
+    character.value = mangaInfo.character;
 
     character.value.forEach(async (item: characterItem) => {
         const blob = await imageApi.get(item.characterPicture);
         item.blob = blob;
     })
 
-    if (res.meta.length > 0) {
+    if (mangaInfo.meta?.length > 0) {
         // banner图
-        for (let i = 0; i < res.meta.length; i++) {
-            const metaItem = res.meta[i];
+        for (let i = 0; i < mangaInfo.meta.length; i++) {
+            const metaItem = mangaInfo.meta[i];
             if (metaItem.metaType === 'banner') {
                 metaItem.blob = await imageApi.get(metaItem.metaFile);
                 bannerSoft.push(metaItem);
@@ -267,7 +268,7 @@ async function render_meta() {
     }
 
     // 漫画封面
-    mangaCover.value = await imageApi.get(res.info.mangaCover);
+    mangaCover.value = await imageApi.get(mangaInfo.mangaCover);
 
     // 将图片进行排序
     bannerSoft.sort((a: any, b: any) => { return a.metaFile - b.metaFile });
