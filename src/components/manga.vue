@@ -82,7 +82,6 @@ async function get_poster(item: mangaItemType) {
 
 async function go_chapter() {
 	const mangaInfo = props.mangaInfo;
-
 	const mangaId = mangaInfo.mangaId;
 	const mangaCover = mangaInfo.mangaCover;
 	const chapterId = mangaInfo.chapterId;
@@ -93,7 +92,7 @@ async function go_chapter() {
 	const page = mangaInfo.page;
 	// 缓存漫画信息
 	global_set('mangaId', mangaId);
-	global_set('mangaName', mangaName);
+	global_set('mangaName', mangaName?.value);
 	global_set('mangaCover', mangaCover);
 	global_set('chapterId', chapterId);
 	global_set('chapterName', chapterName);

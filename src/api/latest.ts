@@ -1,9 +1,9 @@
 /*
  * @Author: 梁楷文 lkw199711@163.com
  * @Date: 2024-04-05 03:53:27
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-02 17:02:55
- * @FilePath: \smanga\src\api\last-read.ts
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2024-08-04 21:56:47
+ * @FilePath: \smanga\src\api\latest.ts
  */
 import {ajax} from './index';
 
@@ -11,7 +11,7 @@ import {ajax} from './index';
  * @description: 上次阅读记录
  * @return {*}
  */
-const lastReadApi = {
+const latestApi = {
 	/**
 	 * @description: 获取漫画最后阅读记录
 	 * @param {number} mangaId
@@ -19,7 +19,7 @@ const lastReadApi = {
 	 */
 	async get_latest(mangaId: number) {
 		const res = await ajax({
-			url: 'lastread/get_latest',
+			url: `latest/${mangaId}`,
 			data: {mangaId},
 		});
 
@@ -41,7 +41,7 @@ const lastReadApi = {
 		ajax({
 			url: 'latest',
 			method: 'post',
-			data: {page, chapterId, mangaId, finish},
+			data: {page, chapterId, mangaId, finish: Number(finish)},
 		});
 	},
 
@@ -53,7 +53,7 @@ const lastReadApi = {
 	 */
 	async get(page = 1, pageSize = 10) {
 		const res = ajax({
-			url: 'lastread/get',
+			url: 'latest',
 			data: {page, pageSize},
 		});
 
@@ -61,4 +61,4 @@ const lastReadApi = {
 	},
 };
 
-export default lastReadApi;
+export default latestApi;

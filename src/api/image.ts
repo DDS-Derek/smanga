@@ -1,8 +1,8 @@
 /*
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-16 03:30:05
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-02 09:47:50
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2024-08-03 12:36:12
  * @FilePath: /smanga/src/api/image.ts
  */
 import Axios from 'axios';
@@ -13,13 +13,13 @@ import {Cookies} from '@/utils';
  * @type {Axios}
  */
 const img = Axios.create({
-	baseURL: url + 'image',
+	baseURL: 'http://localhost:3000/image',
 	timeout: 15 * 1000,
 	method: 'post',
 	responseType: 'blob', // 设置接收格式为blob格式
 	params: {},
 	headers: {
-		'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+		'Content-Type': 'application/json; charset=UTF-8',
 	},
 	transformRequest: [
 		(data) => {
@@ -35,7 +35,7 @@ const img = Axios.create({
 				timestamp,
 			});
 			// 返回json
-			return data;
+			return JSON.stringify(data);
 		},
 	],
 	transformResponse: [
@@ -54,8 +54,10 @@ const imageApi = {
 	 * @return {*}
 	 */
 	async get(file: string) {
-		const [res, err] = await img({data: {file}}).then(res=>[res,null]).catch(err=>[null,err]);
-		
+		const [res, err] = await img({data: {file}})
+			.then((res) => [res, null])
+			.catch((err) => [null, err]);
+
 		if (res) return res.data;
 		// 有错误 则再次且仅一次请求
 		if (err) return (await img({data: {file}})).data;
@@ -67,9 +69,9 @@ const imageApi = {
 		chapterId: number,
 		mangaId: number
 	) {
-		const res = img({data: {file, page, chapterId, mangaId}});
-
-		return (await res).data;
+		if(!file) return false;
+		const res = await img({data: {file, page, chapterId, mangaId}});
+		return res.data;
 	},
 };
 

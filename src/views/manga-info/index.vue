@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-23 02:01:44
+ * @LastEditTime: 2024-08-04 20:14:34
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -25,9 +25,9 @@
                 <perfect-scrollbar class="character-scroll" @wheel="character_wheel"
                     :options="{ suppressScrollX: false, suppressScrollY: true }">
                     <div v-for="item in character" class="character-item" :key="item.characterId">
-                        <img :src="item.blob" :alt="item.characterName">
+                        <img :src="item.blob" :alt="item.metaContent">
                         <div class="right">
-                            <p class="name">{{ item.characterName }}</p>
+                            <p class="name">{{ item.metaContent }}</p>
                             <p class="description">{{ item.description }}</p>
                         </div>
 
@@ -36,7 +36,7 @@
             </div>
 
             <el-descriptions class="meta-info" title="漫画信息" :column="infoColum">
-                <el-descriptions-item label="漫画名称">{{ title }}</el-descriptions-item>
+                <el-descriptions-item label="漫画名称">{{ mangaInfo.mangaName }}</el-descriptions-item>
                 <el-descriptions-item label="作者">{{ mangaInfo.author }}</el-descriptions-item>
                 <el-descriptions-item label="发布时间">{{ mangaInfo.publishDate }}</el-descriptions-item>
                 <el-descriptions-item label="章节总数">{{ mangaInfo.chapterCount }}</el-descriptions-item>
@@ -45,7 +45,8 @@
                 <el-descriptions-item label="更新时间">{{ mangaInfo.updateTime }}</el-descriptions-item>
                 <el-descriptions-item label="评分">{{ mangaInfo.star }}</el-descriptions-item>
                 <el-descriptions-item label="标签">
-                    <el-tag v-for="item in tags" :key="item.tagId" class="tag" size="small" :color="item.tagColor">{{
+                    <el-tag v-for="item in mangaInfo.tags" :key="item.tagId" class="tag" size="small"
+                        :color="item.tagColor">{{
                         item.tagName }}</el-tag>
                 </el-descriptions-item>
                 <el-descriptions-item label="简介">{{ mangaInfo.describe }}</el-descriptions-item>
@@ -77,13 +78,12 @@ import mangaApi from '@/api/manga';
 import imageApi from '@/api/image'
 import { config, userConfig } from '@/store'
 import { tagItemType } from '@/type/tag';
-import { characterItem, metaItemType } from '@/type/meta';
+import { metaItemType } from '@/type/meta';
 import { mangaInfoType } from '@/type/manga';
 import { chapterInfoType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
 import { global_set, global_set_json } from '@/utils'
-import lastReadApi from '@/api/last-read';
-import lastesApi from '@/api/last-read';
+import lastesApi from '@/api/latest';
 import collectApi from '@/api/collect';
 import mangaTagBox from '@/components/manga-tag-box.vue';
 
@@ -92,6 +92,7 @@ const router = useRouter();
 let mangaInfo = reactive<mangaInfoType>({
     mangaId: 0,
     mangaName: '',
+    mangaCover: '',
     author: '',
     browseType: '',
     publishDate: '',
@@ -99,6 +100,8 @@ let mangaInfo = reactive<mangaInfoType>({
     updateTime: '',
     describe: '',
     chapterCount: 0,
+    tags: [],
+    metas: [],
 });
 
 let firstChapterInfo = ref<chapterInfoType>({
@@ -118,10 +121,9 @@ let firstChapterInfo = ref<chapterInfoType>({
 
 let latestChapterInfo = ref<chapterInfoType | false>(false);
 
-let title = ref('');
 let tags = ref<tagItemType[]>([]);
 let banner = ref<metaItemType[]>([]);
-let character = ref<characterItem[]>([]);
+let character = ref<metaItemType[]>([]);
 let mangaCover = ref<string>('');
 let isCollect = ref(false);
 let editTagsDialog = ref(false);
@@ -186,7 +188,7 @@ async function get_latest_reading() {
     const mangaId = mangaInfo.mangaId;
     if (!mangaId) return;
 
-    latestChapterInfo.value = await lastReadApi.get_latest(mangaId);
+    latestChapterInfo.value = await lastesApi.get_latest(mangaId);
 }
 
 /**
@@ -241,40 +243,29 @@ function go_chapter_list() {
 async function render_meta() {
     const route = useRoute();
     const mangaId = Number(route.query.mangaId);
-    mangaInfo = await mangaApi.get_manga_info(mangaId);
-    let bannerSoft: metaItemType[] = [];
-    console.log(mangaInfo, 'res');
-    
-    tags.value = mangaInfo.tags;
-    title.value = mangaInfo.mangaName;
-
-    // 角色信息
-    character.value = mangaInfo.character;
-
-    character.value.forEach(async (item: characterItem) => {
-        const blob = await imageApi.get(item.characterPicture);
-        item.blob = blob;
-    })
-
-    if (mangaInfo.meta?.length > 0) {
-        // banner图
-        for (let i = 0; i < mangaInfo.meta.length; i++) {
-            const metaItem = mangaInfo.meta[i];
-            if (metaItem.metaType === 'banner') {
-                metaItem.blob = await imageApi.get(metaItem.metaFile);
-                bannerSoft.push(metaItem);
-            }
-        }
-    }
+    let banners: metaItemType[] = [];
+    Object.assign(mangaInfo, await mangaApi.get_manga_info(mangaId));
 
     // 漫画封面
     mangaCover.value = await imageApi.get(mangaInfo.mangaCover);
 
-    // 将图片进行排序
-    bannerSoft.sort((a: any, b: any) => { return a.metaFile - b.metaFile });
+    if (!mangaInfo.metas) return;
+    
+    // 广告图
+    banner.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'banner');
+    banner.value.forEach(async (item: metaItemType) => {
+        item.blob = await imageApi.get(item.metaFile);
+    });
 
-    // 将处理好的结果赋值给ref对象 (将计算过程整合 避免多次渲染)
-    banner.value = bannerSoft;
+    // 将图片进行排序
+    banner.value.sort((a: any, b: any) => { return a.metaFile - b.metaFile });
+    
+    // 角色信息
+    character.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'character');
+    character.value.forEach(async (item: metaItemType) => {
+        const blob = await imageApi.get(item.metaFile);
+        item.blob = blob;
+    })
 }
 
 /**
@@ -516,4 +507,3 @@ function update_tags(tagsParams: tagItemType[]) {
     }
 }
 </style>
-

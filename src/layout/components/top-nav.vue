@@ -16,16 +16,9 @@
 
 		<!-- 搜索框 -->
 		<div class="search" v-show="layoutLimit('search')">
-			<el-input
-				class="search-input"
-				v-model="searchText"
-				clearable
-				@keyup.enter="go_search">
+			<el-input class="search-input" v-model="searchText" clearable @keyup.enter="go_search">
 				<template #prepend>
-					<el-select
-						v-model="searchType"
-						placeholder="Select"
-						class="search-select">
+					<el-select v-model="searchType" placeholder="Select" class="search-select">
 						<el-option :label="$t('search.manga')" value="manga" />
 						<el-option :label="$t('search.chapter')" value="chapter" />
 					</el-select>
@@ -39,10 +32,7 @@
 		<!--右侧菜单-->
 		<div class="right-option">
 			<!-- 简化版搜索 -->
-			<div
-				class="search-small"
-				@click="router.push('/search')"
-				v-show="layoutLimit('miniSearch')">
+			<div class="search-small" @click="router.push('/search')" v-show="layoutLimit('miniSearch')">
 				<i class="iconfont icon-sousuo" @click="switch_view_type" />
 			</div>
 
@@ -53,19 +43,9 @@
 
 			<!-- 排序方式 -->
 			<div class="sort" v-show="layoutLimit('sort')">
-				<i
-					:class="['sort-label', 'iconfont', 'icon-paixu']"
-					@click="switch_view_type" />
-				<el-select
-					v-model="userConfig.order"
-					class="sort-select"
-					size="default"
-					@change="sort_order_change">
-					<el-option
-						v-for="item in sortOrder"
-						:key="item"
-						:label="$t(`sortOrder.${item}`)"
-						:value="item">
+				<i :class="['sort-label', 'iconfont', 'icon-paixu']" @click="switch_view_type" />
+				<el-select v-model="userConfig.order" class="sort-select" size="default" @change="sort_order_change">
+					<el-option v-for="item in sortOrder" :key="item" :label="$t(`sortOrder.${item}`)" :value="item">
 						<span class="op-text">{{ $t(`sortOrder.${item}`) }}</span>
 					</el-option>
 				</el-select>
@@ -74,15 +54,8 @@
 			<!-- 主题皮肤 -->
 			<div class="theme" v-show="layoutLimit('theme')">
 				<span class="theme-label" />
-				<el-select
-					v-model="userConfig.theme"
-					class="theme-select"
-					size="default"
-					@change="theme_change">
-					<el-option
-						v-for="item in theme"
-						:key="item.value"
-						:label="$t(`theme.${item.value}`)"
+				<el-select v-model="userConfig.theme" class="theme-select" size="default" @change="theme_change">
+					<el-option v-for="item in theme" :key="item.value" :label="$t(`theme.${item.value}`)"
 						:value="item.value">
 						<span class="op-color" :style="theme_color(item.value)" />
 						<span class="op-text">{{ $t(`theme.${item.value}`) }}</span>
@@ -93,16 +66,9 @@
 			<!--切换语言-->
 			<div class="language" v-show="layoutLimit('language')">
 				<i class="colour colour-yuyanqiehuan" />
-				<el-select
-					v-model="userConfig.language"
-					class="language-select"
-					size="default"
+				<el-select v-model="userConfig.language" class="language-select" size="default"
 					@change="language_change">
-					<el-option
-						v-for="item in languages"
-						:key="item.value"
-						:label="item.label"
-						:value="item.value" />
+					<el-option v-for="item in languages" :key="item.value" :label="item.label" :value="item.value" />
 				</el-select>
 			</div>
 		</div>
@@ -110,25 +76,25 @@
 </template>
 
 <script lang="ts" setup>
-import {config, userConfig} from '@/store';
+import { config, userConfig } from '@/store';
 import languages from '@/store/language';
 import theme from '@/store/theme';
-import {computed, ref} from 'vue';
-import {useI18n} from 'vue-i18n';
-import {set_theme, themes} from '@/style/theme';
-import {Search} from '@element-plus/icons-vue';
-import {useRoute} from 'vue-router';
+import { computed, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import { set_theme, themes } from '@/style/theme';
+import { Search } from '@element-plus/icons-vue';
+import { useRoute } from 'vue-router';
 import router from '@/router';
 import layoutDic from '@/store/top-layout';
 import routeType from '@/type/route';
-const {locale} = useI18n();
+const { locale } = useI18n();
 const route = useRoute();
 
 const searchText = ref('');
 const searchType = ref('manga');
 
 // 排序方式
-const sortOrder = ['id', 'idDesc', 'name', 'nameDesc', 'time', 'timeDesc'];
+const sortOrder = ['id', 'idDesc', 'number', 'numberDesc', 'name', 'nameDesc', 'time', 'timeDesc'];
 
 // 视图类型
 const viewClass = computed(() => {
@@ -204,7 +170,7 @@ function handleSelect(key: string) {
 	}
 }
 
-function sort_order_change(val: string) {}
+function sort_order_change(val: string) { }
 
 function language_change(val: string) {
 	locale.value = val;
@@ -237,6 +203,7 @@ function switch_view_type() {
 .android-seat {
 	height: 4rem;
 }
+
 .top-nav.posted {
 	display: flex;
 	justify-content: space-between;
@@ -285,6 +252,7 @@ function switch_view_type() {
 		color: @s-background;
 	}
 }
+
 .view-type {
 	margin-right: 1rem;
 
@@ -310,6 +278,7 @@ function switch_view_type() {
 
 .theme {
 	margin-right: 2rem;
+
 	&-label {
 		display: inline-block;
 		margin-right: 0.6rem;
@@ -328,12 +297,14 @@ function switch_view_type() {
 .language {
 	display: flex;
 	margin-right: 2rem;
+
 	i {
 		margin-right: 0.6rem;
 		font-size: 3.2rem;
 		//line-height: 3rem;
 		transform: translateY(-0.1rem);
 	}
+
 	&-select {
 		width: 10rem;
 	}
@@ -352,18 +323,19 @@ function switch_view_type() {
 	.theme {
 		margin-right: 2rem;
 	}
+
 	.language {
 		margin-right: 2rem;
 	}
 }
 
-@media only screen and (max-width: 1199px) and (min-width: 768px) {
-}
+@media only screen and (max-width: 1199px) and (min-width: 768px) {}
 
 @media only screen and (max-width: 767px) {
 	.theme {
 		margin-right: 0.8rem;
 	}
+
 	.language {
 		margin-right: 0.8rem;
 	}

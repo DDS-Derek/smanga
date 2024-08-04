@@ -12,7 +12,8 @@
         <line1 ref="lineRef" class="chart charts-pie" v-if="layoutLimit('line')"></line1>
         <list class="chart" v-if="layoutLimit('list')"></list>
     </div>
-    <lastRead v-if="layoutLimit('last-read')"></lastRead>
+    <latest v-if="layoutLimit('latest')">
+    </latest>
 </template>
 
 <script setup lang="ts">
@@ -20,20 +21,20 @@ import pie from '@/components/charts/pie.vue';
 import bar from '@/components/charts/bar.vue';
 import line1 from '@/components/charts/line.vue';
 import list from '@/components/charts/list.vue';
-import lastRead from "@/views/last-read/index.vue";
+import latest from "@/views/latest/index.vue";
 import { onMounted, ref, computed } from 'vue';
 import { config, userConfig } from '@/store';
 
 const pieRef = ref();
 
 const indexViewDic = {
-    '4k': ['pie', 'bar', 'line', 'list', 'last-read'],
-    '2k': ['pie', 'bar', 'line', 'list', 'last-read'],
-    large: ['pie', 'bar', 'line', 'list', 'last-read'],
-    middle: ['pie', 'bar', 'line', 'list', 'last-read'],
-    tablet: ['pie', 'bar', 'line', 'list', 'last-read'],
-    small: ['bar', 'line', 'last-read'],
-    mini: ['bar', 'line', 'last-read'],
+    '4k': ['pie', 'bar', 'line', 'list', 'latest'],
+    '2k': ['pie', 'bar', 'line', 'list', 'latest'],
+    large: ['pie', 'bar', 'line', 'list', 'latest'],
+    middle: ['pie', 'bar', 'line', 'list', 'latest'],
+    tablet: ['pie', 'bar', 'line', 'list', 'latest'],
+    small: ['bar', 'line', 'latest'],
+    mini: ['bar', 'line', 'latest'],
 }
 
 const layoutLimit = computed(() => (key: string) => {

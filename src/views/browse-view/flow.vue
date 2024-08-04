@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-26 17:52:08
+ * @LastEditTime: 2024-08-03 13:41:24
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -47,7 +47,7 @@ export default { name: 'browse-views' }
 <script setup lang="ts">
 import { computed, watch, ref, reactive } from 'vue';
 import imageApi from '@/api/image';
-import lastReadApi from '@/api/last-read';
+import latest from '@/api/latest';
 import {
 	global_get_array,
 	global_set,
@@ -128,7 +128,7 @@ let beforeBookMark = 0;
 watch(
 	() => currentPage.value,
 	() => {
-		lastReadApi.add(currentPage.value, chapterInfo.chapterId, chapterInfo.mangaId, finished.value);
+		latest.add(currentPage.value, chapterInfo.chapterId, chapterInfo.mangaId, finished.value);
 	}
 )
 
@@ -137,16 +137,16 @@ watch(
  */
 async function page_change() {
 	// 无数据 退出
-	if (!imgPathList.value.length) {
+	if (!imgPathList.value?.length) {
 		loading.value = false;
 		return false;
 	}
 
-	// 加载页面并等待返回
-	await load_image(page - 1);
-
 	// 是否加载完全部
 	finished.value = page >= imgPathList.value.length;
+
+	// 加载页面并等待返回
+	await load_image(page - 1);
 
 	// 页码递增
 	++page;
@@ -188,10 +188,15 @@ async function load_image(index: number, errNum = 0, unshift = false) {
 	// 重新请教超过三次 取消此图片加载
 	if (errNum > 3) return false;
 
+	// 无数据 退出
+	if(!imgPathList.value[index]) return false;
+
 	const [res, err] = await imageApi.chapter_img(imgPathList.value[index], index + 1, chapterInfo.chapterId, chapterInfo.mangaId).then(res => [res, null]).catch(err => [null, err]);
 
 	// 错误处理
 	if (err) {
+		console.log(err);
+
 		setTimeout(() => {
 			load_image(index, errNum + 1);
 		}, 1000)
@@ -214,6 +219,7 @@ async function load_image(index: number, errNum = 0, unshift = false) {
  * 重载页面
  */
 async function reload_page(addHistory = true, clearPage = true, pageParams = 1) {
+debugger
 	// 初始化chapterInfo
 	if (!chapterInfo.chapterId) {
 		const chapterId = Number(route.query.chapterId);
@@ -222,7 +228,7 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 		chapterInfo = chapterList.value.filter((item: chapterInfoType) => item.chapterId == chapterId)[0]
 
 		// 更新阅读记录
-		lastReadApi.add(currentPage.value, chapterInfo.chapterId, chapterInfo.mangaId);
+		latest.add(currentPage.value, chapterInfo.chapterId, chapterInfo.mangaId);
 	}
 
 	// 重置图片数据
@@ -241,7 +247,6 @@ async function reload_page(addHistory = true, clearPage = true, pageParams = 1) 
 	}
 
 	const res = await chapterApi.get_images(chapterInfo.chapterId);
-
 	switch (res.state) {
 		case 'uncompressed':
 			setTimeout(() => {
@@ -401,7 +406,7 @@ function dwonload_image() {
 onMounted(() => {
 	// 设置浏览模式
 	config.browseType = 'flow';
-
+	debugger
 	let page = Number(route.params.page) || 1;
 
 	// 部分旧代码将页码设置为0或者-1 这里做下更正

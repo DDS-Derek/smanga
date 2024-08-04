@@ -36,7 +36,7 @@ const ajax = Axios.create({
 			data = data || {};
 			// 加入时间戳与密钥
 			data = Object.assign(data, {
-				userId,
+				userId: Number(userId),
 				timestamp,
 			});
 

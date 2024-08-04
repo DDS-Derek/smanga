@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-09-26 05:38:31
+ * @LastEditTime: 2024-08-04 14:31:13
  * @FilePath: \smanga\src\store\index.ts
  */
 import {reactive} from 'vue';
@@ -72,7 +72,7 @@ export const userConfig = reactive({
 	// 主题皮肤
 	theme: 'grey',
 	// 默认排序规则
-	order: 'name',
+	order: 'number',
 	// 翻页按钮调转
 	pageTurningReverse: false,
 	// 阅读操作面板 顶部与底部尺寸

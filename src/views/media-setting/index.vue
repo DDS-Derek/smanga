@@ -56,7 +56,7 @@
 					<p class="note form-note">{{ $t('mediaManage.note.type') }}</p>
 
 					<el-form-item :label="$t('mediaManage.form.browse')">
-						<el-select v-model="form.defaultBrowse">
+						<el-select v-model="form.browseType">
 							<el-option :label="$t('mediaManage.select.browse0')" value="flow" />
 							<el-option :label="$t('mediaManage.select.browse1')" value="single" />
 							<el-option :label="$t('mediaManage.select.browse2')" value="double" />
@@ -124,7 +124,7 @@
 					<p class="note form-note">{{ $t('mediaManage.note.type') }}</p>
 
 					<el-form-item :label="$t('mediaManage.form.browse')">
-						<el-select v-model="form.defaultBrowse">
+						<el-select v-model="form.browseType">
 							<el-option :label="$t('mediaManage.select.browse0')" value="flow" />
 							<el-option :label="$t('mediaManage.select.browse1')" value="single" />
 							<el-option :label="$t('mediaManage.select.browse2')" value="double" />

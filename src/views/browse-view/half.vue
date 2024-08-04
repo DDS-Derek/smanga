@@ -38,7 +38,7 @@ import { global_get, global_get_array, global_set } from '@/utils';
 import { ElMessage } from 'element-plus';
 import { config, userConfig } from '@/store';
 import historyApi from '@/api/history';
-import lastReadApi from '@/api/last-read';
+import latestApi from '@/api/latest';
 import operationCover from './components/operation-cover.vue';
 import chapterListMenu from './components/chapter-list-menu.vue';
 import bookmark from './components/bookmark.vue';
@@ -104,7 +104,7 @@ const pager = ref();
 watch(
   () => page.value,
   () => {
-    lastReadApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId, page.value >= count.value);
+    latestApi.add(page.value, chapterInfo.chapterId, chapterInfo.mangaId, page.value >= count.value);
   }
 )
 
@@ -190,7 +190,7 @@ async function reload_page(page = 1, addHistory = true) {
     chapterInfo = chapterList.value.filter((item: chapterInfoType) => item.chapterId == chapterId)[0]
 
     // 更新阅读记录
-    lastReadApi.add(page, chapterInfo.chapterId, chapterInfo.mangaId);
+    latestApi.add(page, chapterInfo.chapterId, chapterInfo.mangaId);
   }
 
   if (addHistory) historyApi.add_history();

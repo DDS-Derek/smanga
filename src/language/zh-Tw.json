@@ -304,6 +304,8 @@
   "sortOrder": {
     "id": "id",
     "idDesc": "id-倒序",
+    "number": "章節號",
+    "numberDesc": "章節號-倒序",
     "name": "名稱",
     "nameDesc": "名稱-倒序",
     "time": "入庫時間",
