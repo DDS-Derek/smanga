@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-03 13:41:24
+ * @LastEditTime: 2024-08-04 23:57:57
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -66,9 +66,11 @@ import pageNumber from './components/page-number.vue';
 import { useRoute, useRouter } from 'vue-router';
 import { chapterInfoType } from '@/type/chapter';
 import chapterApi from '@/api/chapter';
+import useBrowseStore from '@/store/browse';
 const { t } = i18n.global;
 const route = useRoute();
 const router = useRouter();
+const browseStore: any = useBrowseStore();
 
 // 图片文件列表
 let imgFileList = ref<string[]>([]);
@@ -189,7 +191,7 @@ async function load_image(index: number, errNum = 0, unshift = false) {
 	if (errNum > 3) return false;
 
 	// 无数据 退出
-	if(!imgPathList.value[index]) return false;
+	if (!imgPathList.value[index]) return false;
 
 	const [res, err] = await imageApi.chapter_img(imgPathList.value[index], index + 1, chapterInfo.chapterId, chapterInfo.mangaId).then(res => [res, null]).catch(err => [null, err]);
 
@@ -219,7 +221,6 @@ async function load_image(index: number, errNum = 0, unshift = false) {
  * 重载页面
  */
 async function reload_page(addHistory = true, clearPage = true, pageParams = 1) {
-debugger
 	// 初始化chapterInfo
 	if (!chapterInfo.chapterId) {
 		const chapterId = Number(route.query.chapterId);
@@ -407,7 +408,7 @@ onMounted(() => {
 	// 设置浏览模式
 	config.browseType = 'flow';
 	debugger
-	let page = Number(route.params.page) || 1;
+	let page = browseStore.page || 1;
 
 	// 部分旧代码将页码设置为0或者-1 这里做下更正
 	if (page < 1) page = 1;

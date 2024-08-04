@@ -38,6 +38,7 @@ import { chapterPageSize } from '@/store/page-size';
 import imageApi from '@/api/image';
 import listSkeleton from '@/components/list-skeleton.vue';
 import queue from '@/store/quque';
+import useBrowseStore from '@/store/browse';
 
 let pageSizes: number[] = [];
 let defaultPageSize = 10;
@@ -98,6 +99,10 @@ async function go_browse(item: any) {
   const chapterListRes = await chapterApi.get(mangaId);
   const chapterList = chapterListRes.list;
 
+  // 使用pinia存储页码
+  const browseStore: any = useBrowseStore();
+  browseStore.page = page;
+
   // 缓存章节信息
   global_set('mangaId', mangaId);
   global_set('mangaCover', mangaCover);
@@ -111,15 +116,13 @@ async function go_browse(item: any) {
   global_set('removeFirst', removeFirst);
   global_set('direction', direction);
 
+
   // 不存储历史记录
   await router.push({
     name: browseType,
     query: {
       chapterId,
-    },
-    params: {
-      page,
-    },
+    }
   });
 }
 
