@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-05 01:17:16
+ * @LastEditTime: 2024-08-05 23:44:33
  * @FilePath: \smanga\src\api\media.ts
  */
 import {ajax} from './index';
@@ -27,7 +27,7 @@ const mediaApi = {
 	 * @return {*}
 	 */
 	async update_media(data: any) {
-		const res = ajax.patch(`media/${data.mediaId}`, data);
+		const res = ajax.put(`media/${data.mediaId}`, data);
 
 		const resData = (await res).data;
 

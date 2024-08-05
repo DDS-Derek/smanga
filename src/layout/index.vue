@@ -1,3 +1,10 @@
+<!--
+ * @Author: lkw199711 lkw199711@163.com
+ * @Date: 2024-08-02 19:27:47
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2024-08-05 22:01:09
+ * @FilePath: \smanga\src\layout\index.vue
+-->
 <template>
 	<div class="layout">
 		<div class="layout-left">
@@ -8,11 +15,7 @@
 				<top-nav />
 			</div>
 			<div class="layout-right-middle">
-				<router-view v-slot="{ Component }">
-					<keep-alive :include="['search', 'manga-list', 'chapter-list']">
-						<component :is="Component" />
-					</keep-alive>
-				</router-view>
+				<router-view />
 			</div>
 		</div>
 	</div>

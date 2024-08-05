@@ -1,8 +1,8 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-05-17 17:17:20
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2024-08-05 22:59:38
  * @FilePath: \smanga\src\api\account.ts
  */
 import {ajax} from './index';
@@ -37,7 +37,7 @@ const userApi = {
 	 * @return {*}
 	 */
 	async update_account(targetUserId: number, data: any) {
-		const res = ajax.patch(`user/${targetUserId}`, {data});
+		const res = ajax.put(`user/${targetUserId}`, data);
 
 		return (await res).data;
 	},

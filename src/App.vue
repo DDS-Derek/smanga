@@ -4,11 +4,7 @@
 			<!-- 消息通知 -->
 			<notice />
 			<el-config-provider :locale="elLocale">
-				<router-view v-slot="{ Component }">
-					<keep-alive include="layout">
-						<component :is="Component" />
-					</keep-alive>
-				</router-view>
+				<router-view />
 			</el-config-provider>
 		</div>
 	</div>

@@ -1,8 +1,8 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-05 19:35:06
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2024-08-05 22:33:30
  * @FilePath: \smanga\src\api\tag.ts
  */
 import axios from 'axios';
@@ -77,13 +77,7 @@ const tagApi = {
 	 * @return {*}
 	 */
 	get_manga_tag: async function (mangaId: number) {
-		const res = ajax({
-			url: `manga-tag/${mangaId}`,
-			data: {
-				nopage: true,
-				mangaId,
-			},
-		});
+		const res = ajax.get(`manga-tag/${mangaId}`);
 
 		const resData: ResType = (await res).data;
 
@@ -97,7 +91,7 @@ const tagApi = {
 	 * @return {*}
 	 */
 	add_manga_tag: async function (mangaId: number, tagId: number) {
-		await ajax.post('tag/manga-tag/add', {mangaId, tagId});
+		await ajax.post('manga-tag', {mangaId, tagId});
 	},
 
 	/**
@@ -106,10 +100,7 @@ const tagApi = {
 	 * @return {*}
 	 */
 	remove_manga_tag: async function (mangaTagId: number) {
-		await ajax({
-			url: 'tag/manga-tag/remove',
-			data: {mangaTagId},
-		});
+		await ajax.delete(`manga-tag/${mangaTagId}`);
 	},
 
 	/**

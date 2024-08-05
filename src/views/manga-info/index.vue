@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-04 20:14:34
+ * @LastEditTime: 2024-08-06 00:38:16
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -176,8 +176,7 @@ async function get_first_chapter() {
     const mangaId = mangaInfo.mangaId;
     if (!mangaId) return;
 
-    const infoRes = await chapterApi.get_first(mangaId, userConfig.order);
-    firstChapterInfo.value = infoRes.request;
+    firstChapterInfo.value = await chapterApi.get_first(mangaId, userConfig.order);
 }
 
 /**
@@ -197,7 +196,6 @@ async function get_latest_reading() {
  */
 async function go_chapter() {
     const chapterInfo = latestChapterInfo.value ? latestChapterInfo.value : firstChapterInfo.value;
-
     const res = await chapterApi.get(chapterInfo.mangaId);
     global_set_json('chapterList', res.list);
 
