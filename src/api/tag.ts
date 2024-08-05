@@ -2,9 +2,10 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-05-17 16:24:50
+ * @LastEditTime: 2024-08-05 19:35:06
  * @FilePath: \smanga\src\api\tag.ts
  */
+import axios from 'axios';
 import {ajax} from './index';
 
 type tagParams = {
@@ -77,7 +78,7 @@ const tagApi = {
 	 */
 	get_manga_tag: async function (mangaId: number) {
 		const res = ajax({
-			url: 'tag/manga-tag/get',
+			url: `manga-tag/${mangaId}`,
 			data: {
 				nopage: true,
 				mangaId,
@@ -117,7 +118,7 @@ const tagApi = {
 	 * @return {*}
 	 */
 	update: async function (data: tagParams) {
-		await ajax.patch(`tag/${data.tagId}`, {data});
+		await ajax.put(`tag/${data.tagId}`, {...data});
 	},
 
 	/**
