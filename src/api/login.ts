@@ -2,16 +2,15 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-05-16 17:29:16
+ * @LastEditTime: 2024-08-06 18:49:54
  * @FilePath: \smanga\src\api\login.ts
  */
 import {ajax} from './index';
 
 const loginApi = {
 	async login(data: any) {
-		const res = ajax.post('login', data);
-
-		return (await res).data;
+		const response = (await ajax.post('login', data)).data;
+		return response?.data;
 	},
 
 	async system_init(userName: string, passWord: string) {

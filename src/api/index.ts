@@ -27,7 +27,7 @@ const ajax = Axios.create({
 		(data, headers) => {
 			// 设置请求头
 			headers['token'] =
-				localStorage.getItem('token') || 'ae3a90e4-cb48-4b3a-8860-56e2fd65b390';
+				Cookies.get('token') || 'ae3a90e4-cb48-4b3a-8860-56e2fd65b390';
 			// 用户标识
 			const userId = Cookies.get('userId');
 			// 获取时间戳

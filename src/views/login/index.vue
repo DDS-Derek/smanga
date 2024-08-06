@@ -46,7 +46,7 @@ export default defineComponent({
 				passWord: '',
 			},
 			showDatabase: false,
-			backClass: 'bg'+1,
+			backClass: 'bg' + 1,
 		};
 	},
 
@@ -55,7 +55,7 @@ export default defineComponent({
 
 	// 计算
 	computed: {
-		
+
 	},
 
 	// 组件
@@ -64,18 +64,19 @@ export default defineComponent({
 	// 方法
 	methods: {
 		async do_login() {
-			const res = await loginApi.login(this.form);
-			if (res.code === 0) {
-				// 缓存用户信息
-				const resInfo = res.data;
-				Object.assign(userInfo, resInfo);
-				Cookies.set('userName', resInfo.userName);
-				Cookies.set('userId', resInfo.userId);
-				Cookies.set('token', resInfo.token);
-				Cookies.set('header', resInfo.header);
+			const loginResponse = await loginApi.login(this.form);
 
-				await this.$router.push('media-list');
-			}
+			if (!loginResponse) return;
+			// 缓存用户信息
+			Object.assign(userInfo, loginResponse);
+			Cookies.set('userName', loginResponse.userName);
+			Cookies.set('userId', loginResponse.userId);
+			Cookies.set('token', loginResponse.token);
+			Cookies.set('header', loginResponse.header);
+			Cookies.set('token', loginResponse.token)
+
+			await this.$router.push('media-list');
+
 		},
 		getBackActive() {
 			// 取1-16的一个数据整数
@@ -97,7 +98,7 @@ export default defineComponent({
 		this.backClass = this.getBackActive();
 
 		const val = localStorage.getItem('activeBack');
-		if (val && val !== '0') this.backClass = 'bg'+val;
+		if (val && val !== '0') this.backClass = 'bg' + val;
 	},
 });
 </script>
