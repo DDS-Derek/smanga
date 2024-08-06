@@ -11,6 +11,7 @@ type Response = {
     data: any;
     list?: any[];
     error?: string;
+    status?: string;
 }
 
 export default Response;

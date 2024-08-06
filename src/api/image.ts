@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-16 03:30:05
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-03 12:36:12
+ * @LastEditTime: 2024-08-06 23:40:21
  * @FilePath: /smanga/src/api/image.ts
  */
 import Axios from 'axios';
@@ -22,16 +22,15 @@ const img = Axios.create({
 		'Content-Type': 'application/json; charset=UTF-8',
 	},
 	transformRequest: [
-		(data) => {
-			// 用户标识
-			const userId = Cookies.get('userId');
+		(data, headers) => {
+			// 设置请求头
+			headers['token'] = Cookies.get('token');
 			// 获取时间戳
 			const timestamp = new Date().getTime();
 			// 初始化传参
 			data = data || {};
 			// 加入时间戳与密钥
 			data = Object.assign(data, {
-				userId,
 				timestamp,
 			});
 			// 返回json

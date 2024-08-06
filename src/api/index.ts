@@ -26,17 +26,13 @@ const ajax = Axios.create({
 	transformRequest: [
 		(data, headers) => {
 			// 设置请求头
-			headers['token'] =
-				Cookies.get('token') || 'ae3a90e4-cb48-4b3a-8860-56e2fd65b390';
-			// 用户标识
-			const userId = Cookies.get('userId');
+			headers['token'] = Cookies.get('token');
 			// 获取时间戳
 			const timestamp = new Date().getTime();
 			// 初始化传参
 			data = data || {};
 			// 加入时间戳与密钥
 			data = Object.assign(data, {
-				currentUserId: Number(userId),
 				timestamp,
 			});
 
@@ -84,12 +80,12 @@ const ajax = Axios.create({
 			}
 
 			// 初次部署
-			if (response.data === 'first deploy') {
+			if (response.status === 'first deploy') {
 				router.push('/init');
 			}
 
 			// 登录信息错误
-			if (response.data === 'user error') {
+			if (response.status === 'token error') {
 				router.push('/login');
 			}
 

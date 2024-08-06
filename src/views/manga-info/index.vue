@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-06 00:38:16
+ * @LastEditTime: 2024-08-06 23:48:41
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -241,13 +241,24 @@ function go_chapter_list() {
 async function render_meta() {
     const route = useRoute();
     const mangaId = Number(route.query.mangaId);
-    let banners: metaItemType[] = [];
     Object.assign(mangaInfo, await mangaApi.get_manga_info(mangaId));
 
     // 漫画封面
     mangaCover.value = await imageApi.get(mangaInfo.mangaCover);
 
     if (!mangaInfo.metas) return;
+
+    const author = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'author')?.metaContent;
+    if (author) mangaInfo.author = author;
+
+    const publishDate = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'publishDate')?.metaContent;
+    if (publishDate) mangaInfo.publishDate = publishDate;
+
+    const describe = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'describe')?.metaContent;
+    if (describe) mangaInfo.describe = describe;
+
+    const star = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'star')?.metaContent;
+    if (star) mangaInfo.star = star;
     
     // 广告图
     banner.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'banner');
