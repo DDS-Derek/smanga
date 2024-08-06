@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-04 19:03:26
+ * @LastEditTime: 2024-08-06 00:36:58
  * @FilePath: \smanga\src\api\chapter.ts
  */
 import {userConfig} from '@/store';
@@ -55,7 +55,8 @@ const chapterApi = {
 			params: {mangaId, order},
 		});
 
-		return res.data;
+		const response = res.data;
+		return response.code === 0 ? response.data : {};
 	},
 
 	async get_images(chapterId: number) {
