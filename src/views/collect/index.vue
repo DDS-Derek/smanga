@@ -64,7 +64,7 @@ import { global_set, global_set_json } from '@/utils';
 import manga from '@/components/manga.vue';
 import chapter from '@/components/chapter.vue';
 import mediaPager from '@/components/media-pager.vue';
-import { get_collect } from '@/api/collect';
+import collectApi from '@/api/collect';
 import type { TabsPaneContext } from 'element-plus';
 import tabs from './tabs.vue';
 import i18n from '@/i18n';
@@ -219,14 +219,14 @@ async function page_change(
 	// 清空数据 避免缓存
 	list.value = [];
 
-	const res: any = await get_collect(
+	const res: any = await collectApi.get(
 		collectType.value,
 		page.value,
 		pageSize,
 		userConfig.order
 	);
-	list.value = res.data.list;
-	count.value = res.data.count;
+	list.value = res.list;
+	count.value = res.count;
 
 	// 结束加载
 	loading.value = false;

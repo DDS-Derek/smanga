@@ -68,8 +68,8 @@ function resize() {
 defineExpose({ resize });
 
 onMounted(async () => {
-    const res = await chartsApi.frequency(10);
-    res.request.map((item: history) => {
+    const frequency = await chartsApi.frequency(10);
+    frequency.map((item: history) => {
         xArr.value.push(item.date.slice(-5));
         seriesArr.value.push(item.num);
     })

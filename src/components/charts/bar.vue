@@ -1,8 +1,8 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-10-27 11:08:16
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-28 06:46:04
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-08-07 11:08:37
  * @FilePath: /smanga/src/views/index/index.vue
 -->
 <template>
@@ -35,7 +35,7 @@ use([
 
 provide(THEME_KEY, 'default');
 const chart = ref();
-let dataArr = ref([]);
+let dataArr = ref<any>([]);
 const option = ref({
     title: {
         text: '漫画类型分布',
@@ -67,8 +67,10 @@ function resize() {
 defineExpose({ resize });
 
 onMounted(async () => {
-    const res = await chartsApi.browse();
-    dataArr.value = res.request.map((item: any) => item.num)
+    const typeObj = await chartsApi.browse();
+    Object.values(typeObj).forEach((item: any) => {
+        dataArr.value.push(item)
+    })
 })
 </script>
 

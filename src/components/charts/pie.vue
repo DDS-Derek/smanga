@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-10-27 11:08:16
  * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-05-29 11:04:37
+ * @LastEditTime: 2024-08-07 15:09:57
  * @FilePath: /smanga/src/views/index/index.vue
 -->
 <template>
@@ -36,6 +36,7 @@ const chart = ref();
 type tag = {
     tagName: string;
     num: number;
+    count: number;
 }
 
 type series = {
@@ -94,9 +95,9 @@ defineExpose({ resize });
 
 onMounted(async () => {
     const res = await chartsApi.tag_count(5);
-    res.request.map((item: tag) => {
+    res.map((item: tag) => {
         legendArr.value.push(item.tagName);
-        seriesArr.value.push({ name: item.tagName, value: item.num });
+        seriesArr.value.push({ name: item.tagName, value: item.count });
     })
     
 })

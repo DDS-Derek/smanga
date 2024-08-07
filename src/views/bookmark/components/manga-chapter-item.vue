@@ -65,7 +65,6 @@ export default defineComponent({
       const browseType = this.chapterInfo.browseType;
 
       // 获取章节列表做右侧菜单
-      debugger
       const chapterListRes = await chapterApi.get(mangaId)
       const chapterList = chapterListRes.list;
 

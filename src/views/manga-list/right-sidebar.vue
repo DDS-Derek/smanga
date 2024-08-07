@@ -63,12 +63,7 @@ import { watch, ref, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
 import { config } from '@/store';
 import mangaApi from '@/api/manga';
-import {
-	get_collect,
-	add_collect,
-	is_collect,
-	remove_collect,
-} from '@/api/collect';
+import collectApi from '@/api/collect';
 import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
 import tagApi, { tagItemType } from '@/api/tag';
@@ -121,7 +116,7 @@ watch(
 watch(
 	() => props.mangaInfo.mangaId,
 	async (val) => {
-		const res = await is_collect('manga', val);
+		const res = await collectApi.is_collect('manga', val);
 		isCollect.value = res.data.isCollect;
 	}
 );
@@ -135,7 +130,7 @@ onMounted(async () => {
  * @return {*}
  */
 async function update_collect_state() {
-	const res = await is_collect('manga', mangaId.value);
+	const res = await collectApi.is_collect('manga', mangaId.value);
 	isCollect.value = res.data.isCollect;
 }
 
@@ -211,9 +206,9 @@ async function menu_select(key: string) {
 			break;
 		case 'collect':
 			if (isCollect.value) {
-				await remove_collect('manga', mangaId.value);
+				await collectApi.remove_collect('manga', mangaId.value);
 			} else {
-				await add_collect(
+				await collectApi.add_collect(
 					Object.assign(mangaInfo, {
 						collectType: 'manga',
 						chapterId: -1,

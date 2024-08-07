@@ -43,7 +43,7 @@ import { config } from '@/store';
 import chapterApi from '@/api/chapter';
 import { ElMessageBox } from 'element-plus';
 import i18n from '@/i18n';
-import { add_collect, is_collect, remove_collect } from '@/api/collect';
+import collectApi from '@/api/collect';
 
 const { t } = i18n.global;
 
@@ -77,7 +77,7 @@ watch(
 watch(
 	() => props.info.chapterId,
 	async (val) => {
-		const res = await is_collect('chapter', val);
+		const res = await collectApi.is_collect('chapter', val);
 		isCollect.value = res.data.request;
 	}
 );
@@ -87,7 +87,7 @@ function close_sidebar() {
 }
 
 async function update_collect_state() {
-	const res = await is_collect('chapter', chapterId.value);
+	const res = await collectApi.is_collect('chapter', chapterId.value);
 	isCollect.value = res.data.request;
 }
 
@@ -114,9 +114,9 @@ async function menu_select(key: string) {
 			break;
 		case 'collect':
 			if (isCollect.value) {
-				await remove_collect('chapter', chapterId.value);
+				await collectApi.remove_collect('chapter', chapterId.value);
 			} else {
-				await add_collect(
+				await collectApi.add_collect(
 					Object.assign(chapterInfo, {
 						collectType: 'chapter',
 					})

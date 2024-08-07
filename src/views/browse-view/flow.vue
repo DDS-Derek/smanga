@@ -1,8 +1,8 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-25 10:45:47
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-04 23:57:57
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-08-07 16:27:20
  * @FilePath: /smanga/src/views/browse-view/flow.vue
 -->
 <template>
@@ -407,7 +407,6 @@ function dwonload_image() {
 onMounted(() => {
 	// 设置浏览模式
 	config.browseType = 'flow';
-	debugger
 	let page = browseStore.page || 1;
 
 	// 部分旧代码将页码设置为0或者-1 这里做下更正

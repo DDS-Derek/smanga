@@ -1,8 +1,8 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-10-28 15:04:07
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-10-28 18:02:21
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-08-07 16:52:11
  * @FilePath: /smanga/src/components/charts/list.vue
 -->
 <template>
@@ -10,7 +10,7 @@
         <div class="title">漫画浏览量</div>
         <el-table :data="mangaList" style="width: 100%">
             <el-table-column prop="mangaName" label="漫画名称" />
-            <el-table-column prop="num" label="Name" width="浏览量" />
+            <el-table-column prop="count" label="浏览量" />
         </el-table>
         <!-- <div class="manga-item" v-for="item in mangaList" :key="item.mangaId">{{ item.mangaName }}:{{ item.num }}</div> -->
     </div>
@@ -23,8 +23,9 @@ import chartsApi from '@/api/charts';
 let mangaList = ref([]);
 
 onMounted(async () => {
-    const res = await chartsApi.ranking(10);
-    mangaList.value = res.request;
+    mangaList.value = await chartsApi.ranking(10);
+    console.log(mangaList.value);
+    
 })
 </script>
 
