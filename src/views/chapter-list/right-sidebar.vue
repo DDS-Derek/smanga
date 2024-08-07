@@ -78,7 +78,7 @@ watch(
 	() => props.info.chapterId,
 	async (val) => {
 		const res = await collectApi.is_collect('chapter', val);
-		isCollect.value = res.data.request;
+		isCollect.value = res;
 	}
 );
 
@@ -88,7 +88,7 @@ function close_sidebar() {
 
 async function update_collect_state() {
 	const res = await collectApi.is_collect('chapter', chapterId.value);
-	isCollect.value = res.data.request;
+	isCollect.value = res;
 }
 
 async function menu_select(key: string) {

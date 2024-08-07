@@ -1,8 +1,8 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-05-03 11:35:44
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-07 20:54:32
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2024-08-07 23:36:18
  * @FilePath: \smanga\src\api\collect.ts
  */
 import {global_get} from '@/utils';
@@ -41,10 +41,7 @@ const collectApi = {
 	 * @return {*}
 	 */
 	async remove_collect(collectType: string, targetId: number) {
-		const res = ajax({
-			url: 'collect/remove',
-			data: {collectType, targetId},
-		});
+		const res = ajax.post(`collect-${collectType}/${targetId}`, {});
 		return (await res).data;
 	},
 	/**
@@ -53,7 +50,10 @@ const collectApi = {
 	 * @return {*}
 	 */
 	async add_collect(data: any) {
-		const http = await ajax.post(`collect-manga/${data.mangaId}`, data);
+		const http = await ajax.post(
+			`collect-${data.collectType}/${data.mangaId}`,
+			data
+		);
 		const response = http.data;
 		return response.data;
 	},
