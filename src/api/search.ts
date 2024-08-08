@@ -1,8 +1,8 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-04-04 00:30:31
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-08-25 15:08:56
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-08-08 14:42:32
  * @FilePath: \smanga\src\api\search.ts
  */
 import {ajax} from './index';
@@ -28,12 +28,15 @@ const searchApi = {
 		pageSize: number,
 		order = ''
 	) {
-		const res =  ajax({
-			url: 'search/get',
-			data: {searchText, searchType, page, pageSize, order},
-		});
+		const http = await ajax.get(
+			searchType === 'manga' ? 'search-mangas' : 'search-chapters',
+			{
+				params: {searchText, searchType, page, pageSize, order},
+			}
+		);
 
-		return (await res).data;
+		const response = http.data;
+		return response;
 	},
 };
 

@@ -43,11 +43,9 @@ const userApi = {
 	},
 
 	async get_user_config() {
-		const res = ajax({
-			url: 'user/config/get',
-		});
-
-		return (await res).data;
+		const http = await ajax.get('user-config');
+		const response = http.data;
+		return response.data;
 	},
 };
 

@@ -44,14 +44,12 @@ type Win = {
 // 生命周期
 onBeforeMount(async () => {
 	// 设置安卓环境
-	if (window.javaObj) {
+	if ((window as any).javaObj) {
 		config.android = true;
 	}
 
 	// 获取用户设置
-	// const res = await get_setting();
-	// 用户信息错误 不继续执行
-	// if (!res) return;
+	await get_setting();
 
 	// 获取书签列表
 	set_bookmark();
@@ -113,29 +111,8 @@ async function set_bookmark() {
 
 async function get_setting() {
 	const res = await userApi.get_user_config();
-
-	// 非正常状态
-	if (res.code === 1) {
-		switch (res.state) {
-			case 'first-deploy':
-				await router.isReady();
-				router.push('/init');
-				break;
-			case 'user-error':
-				await router.isReady();
-				router.push('/login');
-				break;
-			default:
-				break;
-		}
-		return false;
-	}
-
-	if (!res.request) {
-		return false;
-	}
 	
-	const configValue = JSON.parse(res.request);
+	const configValue = JSON.parse(res);
 
 	// 使用数据库用户设置，覆盖当前设置
 	Object.assign(userConfig, configValue.userConfig);

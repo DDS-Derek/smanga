@@ -1,8 +1,8 @@
 /*
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-08-26 02:33:27
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2023-12-03 16:12:52
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-08-08 19:00:43
  * @FilePath: /smanga/src/api/serve-setting.ts
  */
 import {ajax} from './index';
@@ -18,11 +18,9 @@ const serveSettingApi = {
 	 * @return {*}
 	 */
 	async get() {
-		const res = ajax({
-			url: 'serve/get',
-		});
-
-		return (await res).data.request;
+		const http = await ajax.get('serve-config');
+		const response = http.data;
+		return response.data;
 	},
 
 	/**
@@ -31,12 +29,9 @@ const serveSettingApi = {
 	 * @return {*}
 	 */
 	async set(title: string, key: string, value: string | number) {
-		const res = ajax({
-			url: 'serve/set',
-			data: {title, key, value},
-		});
-
-		return (await res).data;
+		const http = await ajax.put('serve-config', {key, value});
+		const response = http.data;
+		return response.data;
 	},
 
 	/**
@@ -60,7 +55,7 @@ const serveSettingApi = {
 	 */
 	async reset_ssl() {
 		const res = ajax({
-			url: 'deploy/reset_ssl'
+			url: 'deploy/reset_ssl',
 		});
 
 		return (await res).data;

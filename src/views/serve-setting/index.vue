@@ -1,8 +1,8 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-07-16 12:02:34
- * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-03-12 19:34:35
+ * @LastEditors: 梁楷文 lkw199711@163.com
+ * @LastEditTime: 2024-08-08 20:15:11
  * @FilePath: /smanga/src/views/serve-setting/index.vue
 -->
 <template>
@@ -12,7 +12,7 @@
             <!-- 语言设置 -->
             <div class="scan">
                 <el-form-item label="扫描周期">
-                    <el-input v-model="form.interval" class="interval"></el-input>
+                    <el-input v-model="form.scan.interval" class="interval"></el-input>
                     <span class="suffix">ms</span>
                     <el-button type="primary" @click="comfirm_interval">确定</el-button>
                 </el-form-item>
@@ -23,7 +23,8 @@
 
             <!--自动解压-->
             <el-form-item label="自动解压">
-                <el-switch class="auto-compress" v-model="form.autoCompress" :active-value="'1'" :inactive-value="'0'" />
+                <el-switch class="auto-compress" v-model="form.compress.auto" :active-value="'1'"
+                    :inactive-value="'0'" />
                 <el-button type="primary" @click="comfirm_auto_compressl">确定</el-button>
             </el-form-item>
 
@@ -35,11 +36,11 @@
             <p class="s-form-title">ssl证书设置 </p>
             <div class="ssl">
                 <el-form-item label="pem文件">
-                    <el-input v-model="form.pem" class="pem" />
+                    <el-input v-model="form.ssl.pem" class="pem" />
                 </el-form-item>
 
                 <el-form-item label="key文件">
-                    <el-input v-model="form.key" class="key" />
+                    <el-input v-model="form.ssl.key" class="key" />
                 </el-form-item>
 
                 <el-button type="primary" @click="comfirm_ssl">确定</el-button>
@@ -57,7 +58,7 @@
             <!-- 语言设置 -->
             <div class="scan">
                 <el-form-item label="压缩大小">
-                    <el-input v-model="form.posterSize" class="poster-size"></el-input>
+                    <el-input v-model="form.compress.poster" class="poster-size"></el-input>
                     <span class="suffix poster-suffix">KB</span>
                     <el-button type="primary" @click="confirm_poster_size">确定</el-button>
                 </el-form-item>
@@ -70,7 +71,7 @@
             <!-- 语言设置 -->
             <div class="scan">
                 <el-form-item label="文件保存时长">
-                    <el-input v-model="form.saveDuration" class="compress-time"></el-input>
+                    <el-input v-model="form.compress.saveDuration" class="compress-time"></el-input>
                     <span class="suffix compress-suffix">天</span>
                     <el-button type="primary" @click="confirm_compress_duration">确定</el-button>
                 </el-form-item>
@@ -106,14 +107,19 @@ let activeBack = ref(0);
 let backRandom = ref(true);
 
 const form = reactive({
-    interval: '',
-    autoCompress: 0,
-    // 证书pem文件
-    pem: '',
-    // 证书key文件
-    key: '',
-    posterSize: 100,
-    saveDuration: 30,
+    scan: {
+        interval: 60
+    },
+    ssl: {
+        pem: '',
+        key: ''
+    },
+    compress: {
+        auto: 0,
+        saveDuration: 30,
+        poster: 300,
+        bookmark: 300
+    },
 })
 
 function back_random(val: boolean) {
@@ -132,7 +138,7 @@ function back_click(item: number) {
  * @return {*}
  */
 async function comfirm_interval() {
-    serveSettingApi.set('scan', 'interval', form.interval)
+    serveSettingApi.set('scan', 'interval', form.scan.interval)
 }
 
 /**
@@ -144,11 +150,11 @@ async function comfirm_auto_compressl() {
 }
 
 async function confirm_poster_size() {
-    serveSettingApi.set('poster', 'size', form.posterSize)
+    serveSettingApi.set('poster', 'size', form.compress.poster)
 }
 
 async function confirm_compress_duration() {
-    serveSettingApi.set('compress', 'saveDuration', form.saveDuration)
+    serveSettingApi.set('compress', 'saveDuration', form.compress.saveDuration)
 }
 
 /**
@@ -156,7 +162,7 @@ async function confirm_compress_duration() {
  * @return {*}
  */
 async function comfirm_ssl() {
-    serveSettingApi.set_ssl(form.pem, form.key);
+    serveSettingApi.set_ssl(form.ssl.pem, form.ssl.key);
 }
 
 /**
@@ -172,7 +178,7 @@ onMounted(async () => {
     Object.assign(form, res);
 
     const val = localStorage.getItem('activeBack');
-    if (val && val!=='0') {
+    if (val && val !== '0') {
         activeBack.value = Number(val);
         backRandom.value = false;
     }
