@@ -104,7 +104,7 @@ const mangaApi = {
 	 * @param data
 	 */
 	async update_manga(data: any) {
-		const res = ajax.patch(`manga/${data.mangaId}`, {data});
+		const res = ajax.put(`manga/${data.mangaId}`, data);
 
 		return (await res).data;
 	},

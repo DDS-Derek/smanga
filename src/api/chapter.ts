@@ -2,7 +2,7 @@
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-03-17 20:18:30
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-06 00:36:58
+ * @LastEditTime: 2024-08-08 22:47:49
  * @FilePath: \smanga\src\api\chapter.ts
  */
 import {userConfig} from '@/store';
@@ -82,7 +82,7 @@ const chapterApi = {
 	 * @param data
 	 */
 	async update_chapter(data: any) {
-		const res = ajax.patch(`chapter/${data.chapterId}`, {data});
+		const res = ajax.put(`chapter/${data.chapterId}`, data);
 
 		return (await res).data;
 	},
