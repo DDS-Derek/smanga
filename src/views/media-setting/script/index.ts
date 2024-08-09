@@ -112,7 +112,7 @@ export default defineComponent({
 		async load_table(page = 1, pageSize = 10) {
 			const res = await mediaApi.get(page, pageSize);
 			console.log(res);
-			
+
 			this.count = Number(res.count);
 			this.tableData = res.list;
 		},
@@ -251,7 +251,7 @@ export default defineComponent({
 
 			const res = await pathApi.add_path(mediaId, this.pathForm);
 
-			if (res.code === 0) {
+			if (res) {
 				// 重置表单
 				Object.assign(this.pathForm, {
 					pathContent: '',
