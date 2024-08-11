@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-07 23:35:40
+ * @LastEditTime: 2024-08-10 23:58:40
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
