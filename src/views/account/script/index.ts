@@ -64,9 +64,8 @@ export default defineComponent({
 			this.form.passWord = '';
 
 			// 加载媒体库许可列表
-			const mediaLimitArr = (val.mediaLimit || '').split('/') || [];
 			this.medias.map((i: any) => {
-				i.permit = !mediaLimitArr.includes(i.mediaId);
+				i.permit = val.mediaPermissons.includes(i.mediaId);
 			});
 		},
 
@@ -108,18 +107,11 @@ export default defineComponent({
 		 * @returns {Promise<void>}
 		 */
 		async do_update() {
-			// 获取限制的媒体库id组
-			const limits = this.medias
-				.filter((i: any) => {
-					return !i.permit;
-				})
-				.map((i: any) => {
-					return i.mediaId;
-				})
-				.join('/');
-
 			const targetUserId = this.form.userId;
-			const res = await userApi.update_account(targetUserId, this.form);
+			const res = await userApi.update_account(
+				targetUserId,
+				Object.assign(this.form, {mediaLimit: this.medias})
+			);
 
 			if (res.code === 0) {
 				// 进入子组件调用刷新
