@@ -31,6 +31,8 @@ export default defineComponent({
 				userId: 0,
 				userName: '',
 				passWord: '',
+				role: 'admin',
+				mediaPermit: 'all',
 			},
 			formInit: {
 				userId: 0,
@@ -150,7 +152,15 @@ export default defineComponent({
 				});
 				return;
 			}
-			const res = await userApi.register(data);
+			if (!data.passWord) {
+				ElMessage({
+					message: '密码不能为空',
+					type: 'warning',
+				});
+			}
+			const res = await userApi.register(
+				Object.assign(this.form, {mediaLimit: this.medias})
+			);
 
 			if (res.code === 0) {
 				this.add_dialog_close();
@@ -166,6 +176,12 @@ export default defineComponent({
 				userName: '',
 				passWord: '',
 			});
+		},
+
+		switch_change(val: any, activeVal: string, inactiveVal: string) {
+			console.log(val);
+
+			return val ? activeVal : inactiveVal;
 		},
 	},
 

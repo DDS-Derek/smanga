@@ -116,6 +116,7 @@ import { config, power } from '@/store';
 import Logo from "@/layout/components/logo.vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from 'vue-router';
+import { Cookies } from '@/utils';
 const route = useRoute();
 const uRouter = useRouter();
 const { t } = useI18n();
@@ -157,17 +158,16 @@ const menuActive = computed(() => {
 })
 
 const userLimit = computed(() => (item: any) => {
-
+  const isAdmin = Cookies.get('role') === 'admin';
   const title = item.meta.title;
+console.log(title);
 
-  if (title === 'mediaManage' && !power.editMedia) {
+  if (title === 'manage' && !isAdmin) {
     return false;
   }
-
-  if (title === 'account' && !power.editUser) {
+  if (title === 'setting' && !isAdmin) {
     return false;
   }
-
   return true;
 
 })

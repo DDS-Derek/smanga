@@ -74,6 +74,7 @@ export default defineComponent({
 			Cookies.set('token', loginResponse.token);
 			Cookies.set('header', loginResponse.header);
 			Cookies.set('token', loginResponse.token)
+			Cookies.set('role', loginResponse.userRole)
 
 			await this.$router.push('media-list');
 
