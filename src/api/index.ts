@@ -1,14 +1,11 @@
 import Axios from 'axios';
-import {ElMessage} from 'element-plus';
-import {Cookies} from '@/utils';
+import { ElMessage } from 'element-plus';
+import { Cookies } from '@/utils';
 import router from '@/router';
 import Response from '@/type/response';
 
-const prodUrl = process.env.VUE_APP_PATH || '/php/public/index.php/';
-
 // 接口路径的设置
-// const url = (process.env.NODE_ENV === 'development' ? '/cms' : '') + prodUrl;
-const url = prodUrl;
+const url = process.env.NODE_ENV === 'development' ? process.env.VUE_APP_PROXY_HTTP_URL : process.env.VUE_APP_PATH;
 
 /**
  * 创建默认接口请求设置
@@ -133,4 +130,4 @@ function array_sort_name(arr: any[]) {
 	});
 }
 
-export {ajax, url, array_sort, array_sort_name};
+export { ajax, url, array_sort, array_sort_name };
