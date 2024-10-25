@@ -164,13 +164,14 @@ function go_browse(item: any) {
 
 	let page = 1;
 
-	router.push({
+	const newUrl = router.resolve({
 		name: browseType.value,
 		query: {
 			chapterId
-		},
-		params: { page },
+		}
 	});
+
+	window.open(newUrl.href, '_blank');
 }
 /**
  * 打开右侧菜单
