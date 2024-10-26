@@ -1,4 +1,6 @@
-FROM node:20.18.0-alpine3.20 AS prepare
+FROM node:20.18.0-alpine3.20 AS base
+
+FROM base AS prepare
 
 RUN apk add git
 RUN git clone https://github.com/lkw199711/smanga-adonis.git /smanga-adonis
@@ -17,7 +19,7 @@ RUN npx prisma generate --schema=./prisma/sqlite/schema.prisma
 RUN npx prisma migrate deploy --schema=./prisma/sqlite/schema.prisma
 RUN npm run build
 
-FROM node:20.18.0-alpine3.20
+FROM base
 
 ENV S6_SERVICES_GRACETIME=30000 \
     S6_KILL_GRACETIME=60000 \
