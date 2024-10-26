@@ -1,0 +1,47 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+if [ ! -f /app/adonis/.env ]; then
+    cat > /app/adonis/.env << EOF
+TZ=UTC
+PORT=9799
+HOST=0.0.0.0
+LOG_LEVEL=info
+APP_KEY=0idvSh_Fq0b5rbHGIx7WIXJ5tySdGO-D
+NODE_ENV=development
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD="sqlite"
+DB_DATABASE="sqlite"
+EOF
+fi
+
+if [ ! -d /data/config ]; then
+    mkdir -p /data/config
+fi
+
+if [ ! -f /data/config/smanga.json ]; then
+    cp /app/adonis/smanga.json /data/config/smanga.json
+fi
+
+echo -e "Change owner to user smanga...\nIt may take a while"
+
+groupmod -o -g "${PGID}" smanga
+usermod -o -u "${PUID}" smanga
+chown smanga:smanga -R /app
+chown smanga:smanga /data
+chown smanga:smanga -R \
+    /data/config \
+    /data/logs \
+    /data/db
+chown smanga:smanga \
+    /data/poster \
+    /data/compress \
+    /data/cache \
+    /data/bookmark
+
+cd /app/adonis || exit
+
+s6-setuidgid smanga npx prisma generate --schema=./prisma/sqlite/schema.prisma
+s6-setuidgid smanga npx prisma migrate deploy --schema=./prisma/sqlite/schema.prisma
