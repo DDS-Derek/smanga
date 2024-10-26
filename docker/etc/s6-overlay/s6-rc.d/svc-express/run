@@ -3,4 +3,4 @@
 
 cd /app/express || exit
 
-exec s6-setuidgid smanga:smanga nodejs index.js
+exec s6-setuidgid smanga nodejs index.js

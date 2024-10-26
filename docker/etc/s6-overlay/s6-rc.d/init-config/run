@@ -43,5 +43,5 @@ chown smanga:smanga \
 
 cd /app/adonis || exit
 
-s6-setuidgid smanga:smanga npx prisma generate --schema=./prisma/sqlite/schema.prisma
-s6-setuidgid smanga:smanga npx prisma migrate deploy --schema=./prisma/sqlite/schema.prisma
+s6-setuidgid smanga npx prisma generate --schema=./prisma/sqlite/schema.prisma
+s6-setuidgid smanga npx prisma migrate deploy --schema=./prisma/sqlite/schema.prisma
