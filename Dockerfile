@@ -13,6 +13,8 @@ FROM prepare AS builder
 
 WORKDIR /smanga-adonis
 RUN npm install
+RUN npx prisma generate --schema=./prisma/sqlite/schema.prisma
+RUN npx prisma migrate deploy --schema=./prisma/sqlite/schema.prisma
 RUN npm run build
 
 FROM node:20.18.0-alpine3.20
