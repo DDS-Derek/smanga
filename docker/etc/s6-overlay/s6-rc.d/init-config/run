@@ -4,7 +4,7 @@
 if [ ! -f /app/adonis/.env ]; then
     cat > /app/adonis/.env << EOF
 TZ=UTC
-PORT=9799
+PORT=9798
 HOST=0.0.0.0
 LOG_LEVEL=info
 APP_KEY=0idvSh_Fq0b5rbHGIx7WIXJ5tySdGO-D
@@ -23,6 +23,14 @@ fi
 
 if [ ! -f /data/config/smanga.json ]; then
     cp /app/adonis/smanga.json /data/config/smanga.json
+fi
+
+if [ ! -d /data/db ]; then
+    mkdir -p /data/db
+fi
+
+if [ ! -f /data/db/smanga.db ]; then
+    cp /app/adonis/smanga.db /data/db/smanga.db
 fi
 
 echo -e "Change owner to user smanga...\nIt may take a while"
