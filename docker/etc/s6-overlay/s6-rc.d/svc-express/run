@@ -3,4 +3,4 @@
 
 cd /app/express || exit
 
-exec s6-setuidgid root ndoejs index.js
+exec s6-setuidgid root nodejs index.js
