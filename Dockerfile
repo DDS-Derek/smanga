@@ -25,7 +25,9 @@ ENV S6_SERVICES_GRACETIME=30000 \
     S6_SYNC_DISKS=1 \
     LANG=C.UTF-8 \
     PS1="\[\e[32m\][\[\e[m\]\[\e[36m\]\u \[\e[m\]\[\e[37m\]@ \[\e[m\]\[\e[34m\]\h\[\e[m\]\[\e[32m\]]\[\e[m\] \[\e[37;35m\]in\[\e[m\] \[\e[33m\]\w\[\e[m\] \[\e[32m\][\[\e[m\]\[\e[37m\]\d\[\e[m\] \[\e[m\]\[\e[37m\]\t\[\e[m\]\[\e[32m\]]\[\e[m\] \n\[\e[1;31m\]$ \[\e[0m\]" \
-    TZ='Asia/Shanghai'
+    TZ='Asia/Shanghai' \
+    PUID=1000 \
+    PGID=1000
 
 COPY --from=builder /smanga-adonis/build /app/adonis
 COPY --from=builder /smanga-adonis/prisma /app/adonis/prisma
@@ -35,13 +37,16 @@ COPY ./dist/docker /app/smanga-website
 
 RUN apk add --no-cache \
         bash \
+        shadow \
         tzdata \
         s6-overlay && \
     cd /app/adonis && \
     npm ci && \
     mkdir cache && \
     cd /app/express && \
-    npm ci
+    npm ci && \
+    addgroup -S smanga -g 918 && \
+    adduser -S smanga -G smanga -h /app -u 918 -s /bin/bash
 
 COPY --chmod=755 ./docker /
 
