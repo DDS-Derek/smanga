@@ -56,6 +56,7 @@ cd /app/adonis || exit
 CONFIG_FILE="/data/config/smanga.json"
 
 # 使用 jq 获取 sql 部分的变量
+CLIENT=$(jq -r '.sql.client' "$CONFIG_FILE")
 HOST=$(jq -r '.sql.host' "$CONFIG_FILE")
 PORT=$(jq -r '.sql.port' "$CONFIG_FILE")
 USERNAME=$(jq -r '.sql.username' "$CONFIG_FILE")
