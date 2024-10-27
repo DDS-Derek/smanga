@@ -39,7 +39,8 @@ RUN apk add --no-cache \
         bash \
         shadow \
         tzdata \
-        s6-overlay && \
+        jq \
+    s6-overlay && \
     cd /app/adonis && \
     npm ci && \
     mkdir cache && \
