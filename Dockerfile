@@ -15,8 +15,6 @@ FROM prepare AS builder
 
 WORKDIR /smanga-adonis
 RUN npm install
-RUN npx prisma generate --schema=./prisma/sqlite/schema.prisma
-RUN npx prisma migrate deploy --schema=./prisma/sqlite/schema.prisma
 RUN npm run build
 
 FROM base
