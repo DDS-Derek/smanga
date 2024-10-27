@@ -74,7 +74,7 @@ elif [ "$CLIENT" == "pgsql" ] || [ "$CLIENT" == "postgresql" ]; then
   VAR_NAME="DB_URL_POSTGRESQL"
   SCHEMA_PATH="./prisma/pgsql/schema.prisma"
 elif [ "$CLIENT" == "sqlite" ]; then
-  DB_URL="sqlite://$DATABASE"  # SQLite 连接字符串
+  DB_URL="file:/data/db/smanga.db"  # SQLite 连接字符串
   VAR_NAME="DB_URL_SQLITE"
   SCHEMA_PATH="./prisma/sqlite/schema.prisma"
 else
