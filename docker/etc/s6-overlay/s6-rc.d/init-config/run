@@ -1,0 +1,99 @@
+#!/usr/bin/with-contenv bash
+# shellcheck shell=bash
+
+if [ ! -f /app/adonis/.env ]; then
+    cat > /app/adonis/.env << EOF
+TZ=UTC
+PORT=9798
+HOST=0.0.0.0
+LOG_LEVEL=info
+APP_KEY=0idvSh_Fq0b5rbHGIx7WIXJ5tySdGO-D
+NODE_ENV=development
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=root
+DB_USERNAME=smanga
+DB_PASSWORD=sqlite
+DB_DATABASE=sqlite
+DB_FILE=/data/db/smanga.db
+EOF
+fi
+
+if [ ! -d /data/config ]; then
+    mkdir -p /data/config
+fi
+
+if [ ! -f /data/config/smanga.json ]; then
+    cp /app/adonis/smanga.json /data/config/smanga.json
+fi
+
+if [ ! -d /data/db ]; then
+    mkdir -p /data/db
+fi
+
+if [ ! -f /data/db/smanga.db ]; then
+    cp /app/adonis/smanga.db /data/db/smanga.db
+fi
+
+echo -e "Change owner to user smanga...\nIt may take a while"
+
+groupmod -o -g "${PGID}" smanga
+usermod -o -u "${PUID}" smanga
+chown smanga:smanga -R /app
+chown smanga:smanga /data
+chown smanga:smanga -R \
+    /data/config \
+    /data/logs \
+    /data/db
+chown smanga:smanga \
+    /data/poster \
+    /data/compress \
+    /data/cache \
+    /data/bookmark
+
+cd /app/adonis || exit
+
+# 读取配置文件
+CONFIG_FILE="/data/config/smanga.json"
+
+# 使用 jq 获取 sql 部分的变量
+CLIENT=$(jq -r '.sql.client' "$CONFIG_FILE")
+HOST=$(jq -r '.sql.host' "$CONFIG_FILE")
+PORT=$(jq -r '.sql.port' "$CONFIG_FILE")
+USERNAME=$(jq -r '.sql.username' "$CONFIG_FILE")
+PASSWORD=$(jq -r '.sql.password' "$CONFIG_FILE")
+DATABASE=$(jq -r '.sql.database' "$CONFIG_FILE")
+FILE=$(jq -r '.sql.file' "$CONFIG_FILE")
+
+# 拼接数据库连接字符串
+if [ "$CLIENT" == "mysql" ]; then
+  DB_URL="mysql://$USERNAME:$PASSWORD@$HOST:$PORT/$DATABASE"
+  VAR_NAME="DB_URL_MYSQL"
+  SCHEMA_PATH="./prisma/mysql/schema.prisma"
+elif [ "$CLIENT" == "pgsql" ] || [ "$CLIENT" == "postgresql" ]; then
+  DB_URL="postgresql://$USERNAME:$PASSWORD@$HOST:$PORT/$DATABASE"
+  VAR_NAME="DB_URL_POSTGRESQL"
+  SCHEMA_PATH="./prisma/pgsql/schema.prisma"
+elif [ "$CLIENT" == "sqlite" ]; then
+  DB_URL="file:/data/db/smanga.db"  # SQLite 连接字符串
+  VAR_NAME="DB_URL_SQLITE"
+  SCHEMA_PATH="./prisma/sqlite/schema.prisma"
+else
+  echo "Unsupported database client: $CLIENT"
+  exit 1
+fi
+
+# 修改 /app/adonis/.env 文件
+ENV_FILE="/app/adonis/.env"
+
+# 更新 .env 文件中的对应变量
+if grep -q "$VAR_NAME=" "$ENV_FILE"; then
+  # 如果存在，则替换
+  sed -i "s|^$VAR_NAME=.*|$VAR_NAME=$DB_URL|" "$ENV_FILE"
+else
+  # 如果不存在，则添加
+  echo "$VAR_NAME=$DB_URL" >> "$ENV_FILE"
+fi
+
+s6-setuidgid smanga npx prisma generate --schema="$SCHEMA_PATH"
+s6-setuidgid smanga npx prisma migrate deploy --schema="$SCHEMA_PATH"
