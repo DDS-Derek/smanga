@@ -1,0 +1,49 @@
+name: Build Smanga Windows
+
+on:
+    workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Smanga Windows
+    runs-on: windows-latest
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v4
+
+      -
+        name: Setup node
+        uses: actions/setup-node@v4
+        with:
+            node-version: '20'
+            cache: 'npm'
+
+      -
+        name: Build exe
+        run: |
+            git clone -b main https://github.com/lkw199711/smanga-electron.git windows
+            Set-Location -Path windows/
+            git clone -b main https://github.com/lkw199711/smanga-adonis.git smanga-adonis-build
+            git clone -b electron https://github.com/lkw199711/smanga.git smanga-webui-build
+            Set-Location -Path smanga-adonis-build/
+            npm install
+            Set-Location -Path ..
+            Set-Location -Path smanga-webui-build/
+            npm install
+            Set-Location -Path ..
+            Copy-Item -Path smanga-adonis-build/prisma/ -Destination ./ -Recurse
+            Copy-Item -Path smanga-adonis-build/data/ -Destination ./ -Recurse
+            Copy-Item -Path smanga-adonis-build/node_modules/ -Destination ./ -Recurse
+            npm install
+            npm run make
+            Copy-Item -Path .\smanga-adonis-build\node_modules\* -Destination .\out\smanga-electron-win32-x64\resources\app.asar.unpacked\smanga-adonis-build\node_modules -Recurse -Force
+            Compress-Archive -Path .\out\smanga-electron-win32-x64 -DestinationPath .\smanga-electron-win32-x64.zip
+        shell: pwsh
+
+      - 
+        name: Upload Windows File
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows
+          path: windows/smanga-electron-win32-x64.zip
