@@ -35,6 +35,7 @@ jobs:
             Copy-Item -Path smanga-adonis-build/prisma/ -Destination ./ -Recurse
             Copy-Item -Path smanga-adonis-build/data/ -Destination ./ -Recurse
             Copy-Item -Path smanga-adonis-build/node_modules/ -Destination ./ -Recurse
+            Copy-Item -Path ../.env.windows_build -Destination ./.env -Force
             npm install
             npm run make
             Copy-Item -Path .\smanga-adonis-build\node_modules\* -Destination .\out\smanga-electron-win32-x64\resources\app.asar.unpacked\smanga-adonis-build\node_modules -Recurse -Force
@@ -47,3 +48,44 @@ jobs:
         with:
           name: windows
           path: windows/smanga-electron-win32-x64.zip
+
+  release:
+    needs: ['build']
+    runs-on: ubuntu-latest
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v4
+
+      - 
+        name: Set Version
+        id: set-version
+        run: |
+          SMANGA_VERSION=$(jq -r '.version' package.json)
+          echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
+
+      - 
+        name: Download Artifact
+        uses: actions/download-artifact@v3
+
+      - 
+        name: Delete Release
+        uses: dev-drprasad/delete-tag-and-release@v1.1
+        with:
+          tag_name: ${{ steps.set-version.outputs.version }}
+          delete_release: true
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - 
+        name: Generate Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.set-version.outputs.version }}
+          name: ${{ steps.set-version.outputs.version }}
+          draft: false
+          prerelease: false
+          make_latest: true
+          files: |
+            windows/smanga-electron-win32-x64.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
