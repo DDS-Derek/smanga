@@ -20,25 +20,53 @@ jobs:
             cache: 'npm'
 
       -
+        name: Build adonis
+        run: |
+            git clone -b main https://github.com/lkw199711/smanga-adonis.git smanga-adonis-build
+            Set-Location -Path smanga-adonis-build/
+            npm install
+            npm run build
+
+            Set-Location -Path build/
+            Copy-Item -Path ../prisma/ -Destination ./ -Recurse
+            Copy-Item -Path ../data/ -Destination ./ -Recurse
+            Copy-Item -Path ../node_modules/ -Destination ./ -Recurse
+
+      -
+        name: Build webui
+        run: |
+            git clone -b electron https://github.com/lkw199711/smanga.git smanga-webui-build
+            Set-Location -Path smanga-webui-build/
+            npm install
+            npm run build-docker
+
+      -
         name: Build exe
         run: |
             git clone -b main https://github.com/lkw199711/smanga-electron.git windows
             Set-Location -Path windows/
-            git clone -b main https://github.com/lkw199711/smanga-adonis.git smanga-adonis-build
-            git clone -b electron https://github.com/lkw199711/smanga.git smanga-webui-build
-            Set-Location -Path smanga-adonis-build/
-            npm install
-            Set-Location -Path ..
-            Set-Location -Path smanga-webui-build/
-            npm install
-            Set-Location -Path ..
+
+            Copy-Item -Path smanga-adonis-build/build -Destination ./smanga-adonis-build/ -Recurse
+            Get-ChildItem smanga-adonis-build/ -Force
+
+            Copy-Item -Path smanga-webui-build/dist -Destination ./smanga-webui-build/ -Recurse
+            Get-ChildItem smanga-webui-build/ -Force
+
             Copy-Item -Path smanga-adonis-build/prisma/ -Destination ./ -Recurse
             Copy-Item -Path smanga-adonis-build/data/ -Destination ./ -Recurse
             Copy-Item -Path smanga-adonis-build/node_modules/ -Destination ./ -Recurse
             Copy-Item -Path ../.env.windows_build -Destination ./.env -Force
+
+            Get-ChildItem -Force
+
             npm install
             npm run make
+
             Copy-Item -Path .\smanga-adonis-build\node_modules\* -Destination .\out\smanga-electron-win32-x64\resources\app.asar.unpacked\smanga-adonis-build\node_modules -Recurse -Force
+            Copy-Item -Path .\smanga-adonis-build\data -Destination .\out\smanga-electron-win32-x64\ -Recurse -Force
+            Copy-Item -Path .\smanga-adonis-build\prisma -Destination .\out\smanga-electron-win32-x64\ -Recurse -Force
+            Copy-Item -Path ..\.env.windows_build -Destination .\out\smanga-electron-win32-x64\.env -Force
+            Get-ChildItem .\out\smanga-electron-win32-x64 -Force
             Compress-Archive -Path .\out\smanga-electron-win32-x64 -DestinationPath .\smanga-electron-win32-x64.zip
         shell: pwsh
 
