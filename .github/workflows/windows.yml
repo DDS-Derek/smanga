@@ -12,14 +12,6 @@ jobs:
         name: Checkout
         uses: actions/checkout@v4
 
-      - 
-        name: Set Version
-        id: set-version
-        run: |
-            SMANGA_VERSION=$(jq -r '.version' package.json)
-            echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
-            ${{ steps.set-version.outputs.version }}
-
       -
         name: Setup node
         uses: actions/setup-node@v4
