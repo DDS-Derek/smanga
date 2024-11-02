@@ -1,0 +1,56 @@
+name: Build Smanga Windows
+
+on:
+    workflow_dispatch:
+
+jobs:
+  build:
+    name: Build Smanga Windows
+    runs-on: windows-latest
+    steps:
+      - 
+        name: Checkout
+        uses: actions/checkout@v4
+
+      - 
+        name: Set Version
+        id: set-version
+        run: |
+            SMANGA_VERSION=$(jq -r '.version' package.json)
+            echo "version=${SMANGA_VERSION}" >> $GITHUB_OUTPUT
+            ${{ steps.set-version.outputs.version }}
+
+      -
+        name: Setup node
+        uses: actions/setup-node@v4
+        with:
+            node-version: '20'
+            cache: 'npm'
+
+      -
+        name: Build exe
+        run: |
+            git clone -b main https://github.com/lkw199711/smanga-electron.git windows
+            Set-Location -Path windows/
+            npm install
+            git clone -b main https://github.com/lkw199711/smanga-adonis.git smanga-adonis-build
+            Set-Location -Path smanga-adonis-build/
+            npm install
+            Set-Location -Path ..
+            git clone -b electron https://github.com/lkw199711/smanga.git smanga-webui-build
+            Set-Location -Path smanga-webui-build/
+            npm install
+            Set-Location -Path ..
+            Copy-Item -Path smanga-adonis-build/prisma/ -Destination ./ -Recurse
+            Copy-Item -Path smanga-adonis-build/data/ -Destination ./ -Recurse
+            Copy-Item -Path smanga-adonis-build/node_modules/ -Destination ./ -Recurse
+            npm run make
+            Compress-Archive -Path .\out -DestinationPath .\smanga-windows.zip
+        shell: pwsh
+
+      - 
+        name: Upload Windows File
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows
+          path: smanga-windows.zip
