@@ -24,7 +24,13 @@ jobs:
         run: |
             git clone -b main https://github.com/lkw199711/smanga-adonis.git smanga-adonis-build
             Set-Location -Path smanga-adonis-build/
+            Copy-Item -Path .env.example -Destination .env -Force
+            
             npm install
+
+            npx prisma generate --schema=./prisma/sqlite/schema.prisma
+            npx prisma migrate deploy --schema=./prisma/sqlite/schema.prisma
+            
             npm run build
 
             Set-Location -Path build/
@@ -55,7 +61,7 @@ jobs:
             Copy-Item -Path smanga-adonis-build/prisma/ -Destination ./ -Recurse
             Copy-Item -Path smanga-adonis-build/data/ -Destination ./ -Recurse
             Copy-Item -Path smanga-adonis-build/node_modules/ -Destination ./ -Recurse
-            Copy-Item -Path ../.env.windows_build -Destination ./.env -Force
+            Copy-Item -Path ../smanga-adonis-build/.env.example -Destination .env -Force
 
             Get-ChildItem -Force
 
@@ -65,7 +71,7 @@ jobs:
             Copy-Item -Path .\smanga-adonis-build\node_modules\* -Destination .\out\smanga-electron-win32-x64\resources\app.asar.unpacked\smanga-adonis-build\node_modules -Recurse -Force
             Copy-Item -Path .\smanga-adonis-build\data -Destination .\out\smanga-electron-win32-x64\ -Recurse -Force
             Copy-Item -Path .\smanga-adonis-build\prisma -Destination .\out\smanga-electron-win32-x64\ -Recurse -Force
-            Copy-Item -Path ..\.env.windows_build -Destination .\out\smanga-electron-win32-x64\.env -Force
+            Copy-Item -Path ..\smanga-adonis-build\.env.example -Destination .\out\smanga-electron-win32-x64\.env -Force
             Get-ChildItem .\out\smanga-electron-win32-x64 -Force
             Compress-Archive -Path .\out\smanga-electron-win32-x64 -DestinationPath .\smanga-electron-win32-x64.zip
         shell: pwsh
