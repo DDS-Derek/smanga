@@ -37,6 +37,7 @@ jobs:
             Copy-Item -Path ../prisma/ -Destination ./ -Recurse
             Copy-Item -Path ../data/ -Destination ./ -Recurse
             Copy-Item -Path ../node_modules/ -Destination ./ -Recurse
+            npm ci
 
       -
         name: Build webui
