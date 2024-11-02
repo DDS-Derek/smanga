@@ -47,7 +47,7 @@
                 <el-descriptions-item label="标签">
                     <el-tag v-for="item in mangaInfo.tags" :key="item.tagId" class="tag" size="small"
                         :color="item.tagColor">{{
-                        item.tagName }}</el-tag>
+                            item.tagName }}</el-tag>
                 </el-descriptions-item>
                 <el-descriptions-item label="简介">{{ mangaInfo.describe }}</el-descriptions-item>
             </el-descriptions>
@@ -244,7 +244,12 @@ async function render_meta() {
     Object.assign(mangaInfo, await mangaApi.get_manga_info(mangaId));
 
     // 漫画封面
-    mangaCover.value = await imageApi.get(mangaInfo.mangaCover);
+    try {
+        mangaCover.value = await imageApi.get(mangaInfo.mangaCover);
+    } catch (e) {
+        console.log(e.message);
+    }
+
 
     if (!mangaInfo.metas) return;
 
@@ -259,7 +264,7 @@ async function render_meta() {
 
     const star = mangaInfo.metas.find((item: metaItemType) => item.metaName === 'star')?.metaContent;
     if (star) mangaInfo.star = star;
-    
+
     // 广告图
     banner.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'banner');
     banner.value.forEach(async (item: metaItemType) => {
@@ -268,7 +273,7 @@ async function render_meta() {
 
     // 将图片进行排序
     banner.value.sort((a: any, b: any) => { return a.metaFile - b.metaFile });
-    
+
     // 角色信息
     character.value = mangaInfo.metas.filter((item: metaItemType) => item.metaName === 'character');
     character.value.forEach(async (item: metaItemType) => {

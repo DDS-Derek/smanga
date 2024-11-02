@@ -5,7 +5,7 @@
  * @LastEditTime: 2024-08-09 16:12:39
  * @FilePath: \smanga\src\api\path.ts
  */
-import {ajax} from './index';
+import { ajax } from './index';
 
 const pathApi = {
 	/**
@@ -17,7 +17,7 @@ const pathApi = {
 	async get_path(mediaId: number, page: number, pageSize: number) {
 		const res = ajax({
 			url: 'path',
-			params: {mediaId, page, pageSize},
+			params: { mediaId, page, pageSize },
 		});
 
 		return (await res).data;
@@ -30,11 +30,7 @@ const pathApi = {
 	 * @param pathId
 	 */
 	async rescan_path(mediaId: any, path: any, pathId: any) {
-		const res = ajax({
-			url: 'path/rescan',
-			data: {mediaId, path, pathId},
-		});
-
+		const res = ajax.put(`path/scan/${pathId}`)
 		return (await res).data;
 	},
 
@@ -69,7 +65,7 @@ const pathApi = {
 	 * @param path
 	 */
 	async add_path(mediaId: any, pathForm: any) {
-		const http = await ajax.post('path', Object.assign({mediaId}, pathForm));
+		const http = await ajax.post('path', Object.assign({ mediaId }, pathForm));
 		const response = http.data;
 		return response.data;
 	},
