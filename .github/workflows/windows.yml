@@ -37,6 +37,7 @@ jobs:
             Copy-Item -Path ../prisma/ -Destination ./ -Recurse
             Copy-Item -Path ../data/ -Destination ./ -Recurse
             Copy-Item -Path ../node_modules/ -Destination ./ -Recurse
+            Copy-Item -Path ../.env.example -Destination .env -Force
             npm ci
 
       -
