@@ -24,18 +24,18 @@ jobs:
         run: |
             git clone -b main https://github.com/lkw199711/smanga-electron.git windows
             Set-Location -Path windows/
-            npm install
             git clone -b main https://github.com/lkw199711/smanga-adonis.git smanga-adonis-build
+            git clone -b electron https://github.com/lkw199711/smanga.git smanga-webui-build
             Set-Location -Path smanga-adonis-build/
             npm install
             Set-Location -Path ..
-            git clone -b electron https://github.com/lkw199711/smanga.git smanga-webui-build
             Set-Location -Path smanga-webui-build/
             npm install
             Set-Location -Path ..
             Copy-Item -Path smanga-adonis-build/prisma/ -Destination ./ -Recurse
             Copy-Item -Path smanga-adonis-build/data/ -Destination ./ -Recurse
             Copy-Item -Path smanga-adonis-build/node_modules/ -Destination ./ -Recurse
+            npm install
             npm run make
             Compress-Archive -Path .\out -DestinationPath .\smanga-windows.zip
         shell: pwsh
