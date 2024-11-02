@@ -37,7 +37,8 @@ jobs:
             Copy-Item -Path smanga-adonis-build/node_modules/ -Destination ./ -Recurse
             npm install
             npm run make
-            Compress-Archive -Path .\out -DestinationPath .\smanga-windows.zip
+            Copy-Item -Path .\smanga-adonis-build\node_modules\* -Destination .\out\smanga-electron-win32-x64\resources\app.asar.unpacked\smanga-adonis-build\node_modules -Recurse -Force
+            Compress-Archive -Path .\out\smanga-electron-win32-x64 -DestinationPath .\smanga-electron-win32-x64.zip
         shell: pwsh
 
       - 
@@ -45,4 +46,4 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: windows
-          path: windows/smanga-windows.zip
+          path: windows/smanga-electron-win32-x64.zip
