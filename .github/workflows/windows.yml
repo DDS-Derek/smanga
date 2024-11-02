@@ -46,10 +46,10 @@ jobs:
             git clone -b main https://github.com/lkw199711/smanga-electron.git windows
             Set-Location -Path windows/
 
-            Copy-Item -Path smanga-adonis-build/build -Destination ./smanga-adonis-build/ -Recurse
+            Copy-Item -Path ../smanga-adonis-build/build -Destination ./smanga-adonis-build/ -Recurse
             Get-ChildItem smanga-adonis-build/ -Force
 
-            Copy-Item -Path smanga-webui-build/dist -Destination ./smanga-webui-build/ -Recurse
+            Copy-Item -Path ../smanga-webui-build/dist -Destination ./smanga-webui-build/ -Recurse
             Get-ChildItem smanga-webui-build/ -Force
 
             Copy-Item -Path smanga-adonis-build/prisma/ -Destination ./ -Recurse
