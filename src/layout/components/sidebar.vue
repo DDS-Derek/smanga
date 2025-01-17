@@ -160,7 +160,6 @@ const menuActive = computed(() => {
 const userLimit = computed(() => (item: any) => {
   const isAdmin = Cookies.get('role') === 'admin';
   const title = item.meta.title;
-console.log(title);
 
   if (title === 'manage' && !isAdmin) {
     return false;

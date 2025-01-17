@@ -2,7 +2,7 @@
  * @Author: error: error: git config user.name & please set dead value or install git && error: git config user.email & please set dead value or install git & please set dead value or install git
  * @Date: 2023-08-15 23:05:47
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-10 23:58:40
+ * @LastEditTime: 2025-01-17 14:26:53
  * @FilePath: /smanga/src/views/manga-info/index.vue
 -->
 <template>
@@ -86,6 +86,7 @@ import { global_set, global_set_json } from '@/utils'
 import lastesApi from '@/api/latest';
 import collectApi from '@/api/collect';
 import mangaTagBox from '@/components/manga-tag-box.vue';
+import useBrowseStore from '@/store/browse';
 
 const router = useRouter();
 
@@ -206,14 +207,28 @@ async function go_chapter() {
     global_set('chapterType', chapterInfo.chapterType);
     global_set('chapterCover', chapterInfo.chapterCover);
 
+    // 使用pinia存储页码
     let page = chapterInfo.page || 1;
+    console.log(chapterInfo);
+    // return;
+    
+    const browseStore: any = useBrowseStore();
+    browseStore.page = page;
+
+    // const newUrl = router.resolve({
+    //     name: mangaInfo.browseType,
+    //     query: {
+    //         chapterId: chapterInfo.chapterId
+    //     }
+    // });
+
+    // window.open(newUrl.href, '_blank');
 
     router.push({
-        name: chapterInfo.browseType,
+        name: mangaInfo.browseType,
         query: {
             chapterId: chapterInfo.chapterId
-        },
-        params: { page },
+        }
     });
 }
 

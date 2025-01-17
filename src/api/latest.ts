@@ -2,7 +2,7 @@
  * @Author: 梁楷文 lkw199711@163.com
  * @Date: 2024-04-05 03:53:27
  * @LastEditors: lkw199711 lkw199711@163.com
- * @LastEditTime: 2024-08-04 21:56:47
+ * @LastEditTime: 2025-01-17 13:51:30
  * @FilePath: \smanga\src\api\latest.ts
  */
 import {ajax} from './index';
@@ -26,7 +26,7 @@ const latestApi = {
 		if (res.data.code == 1) {
 			return false;
 		} else {
-			return res.data.request;
+			return res.data.data;
 		}
 	},
 

@@ -1,8 +1,8 @@
 <!--
  * @Author: lkw199711 lkw199711@163.com
  * @Date: 2023-10-28 15:04:07
- * @LastEditors: 梁楷文 lkw199711@163.com
- * @LastEditTime: 2024-08-07 16:52:11
+ * @LastEditors: lkw199711 lkw199711@163.com
+ * @LastEditTime: 2025-01-17 14:38:13
  * @FilePath: /smanga/src/components/charts/list.vue
 -->
 <template>
@@ -24,8 +24,6 @@ let mangaList = ref([]);
 
 onMounted(async () => {
     mangaList.value = await chartsApi.ranking(10);
-    console.log(mangaList.value);
-    
 })
 </script>
 
